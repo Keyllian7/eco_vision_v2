@@ -21,8 +21,11 @@
         <h2>Aquisição da Imagem</h2>
       </div>
       <p class="explicacao">
-        Envie a imagem ambiental. Ela é lida em BGR (padrão interno do OpenCV),
-        convertida para RGB e seus metadados são extraídos: resolução, canais e tamanho.
+        Ponto de partida: a foto enviada é lida e convertida para o formato
+        <b>RGB</b> (vermelho, verde e azul). Cada pixel guarda esses 3 valores de cor.
+        Daqui extraímos os dados básicos da imagem — <b>resolução</b>, número de
+        <b>canais</b> e <b>tamanho</b> do arquivo — que aparecem nas tags abaixo.
+        <i>Palavras-chave: RGB, resolução, metadados.</i>
       </p>
       <label class="zona-upload" id="zona-upload">
         <input type="file" id="input-imagem" accept="image/*" hidden>

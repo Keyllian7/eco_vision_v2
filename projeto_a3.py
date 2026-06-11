@@ -110,6 +110,8 @@ def upload():
         info=[
             {"label": "Resolução", "valor": f"{largura} × {altura} px"},
             {"label": "Canais", "valor": f"{canais} (RGB)"},
+            {"label": "Profundidade", "valor": "8 bits/canal [0–255]"},
+            {"label": "Leitura", "valor": "BGR → RGB"},
             {"label": "Tamanho", "valor": f"{tamanho_kb:.1f} KB"},
         ],
     )
@@ -141,6 +143,8 @@ def etapa_pre_processamento():
         "info": [
             {"label": "Nova resolução",
              "valor": f"{img_red.shape[1]} × {img_red.shape[0]} px"},
+            {"label": "Cinza (luminância)", "valor": "0,299R + 0,587G + 0,114B"},
+            {"label": "Interpolação", "valor": "por área (média dos pixels)"},
             {"label": "Normalização",
              "valor": f"[{img_norm.min():.2f}, {img_norm.max():.2f}]"},
         ],
@@ -154,6 +158,7 @@ def etapa_histograma():
         "imagens": [{"url": url_resultado("01_histograma_rgb.png"),
                      "legenda": "Distribuição de intensidades por canal"}],
         "info": [
+            {"label": "Bins por canal", "valor": "256 (0–255)"},
             {"label": "Média R", "valor": f"{m[0]:.1f}"},
             {"label": "Média G", "valor": f"{m[1]:.1f}"},
             {"label": "Média B", "valor": f"{m[2]:.1f}"},
@@ -185,8 +190,10 @@ def etapa_filtro_gaussiano():
                                  f"Filtro Gaussiano (σ = {filtros.SIGMA_GAUSSIANO})"),
         ],
         "info": [
+            {"label": "Tipo", "valor": "passa-baixa linear"},
             {"label": "Kernel", "valor": "gaussiano, gerado a partir de σ"},
             {"label": "Sigma (σ)", "valor": f"{filtros.SIGMA_GAUSSIANO}"},
+            {"label": "Efeito nas bordas", "valor": "borra (suaviza tudo)"},
         ],
     }
 
@@ -201,8 +208,10 @@ def etapa_filtro_mediana():
                                  f"Filtro de Mediana (kernel {k}×{k})"),
         ],
         "info": [
-            {"label": "Kernel", "valor": f"{k} × {k}"},
+            {"label": "Tipo", "valor": "não-linear (de ordem)"},
+            {"label": "Kernel", "valor": f"{k} × {k} ({k * k} valores)"},
             {"label": "Operação", "valor": "mediana da vizinhança"},
+            {"label": "Robusto a", "valor": "ruído sal e pimenta"},
         ],
     }
 
@@ -219,8 +228,10 @@ def etapa_filtro_bilateral():
                                  f"σcor={s}, σespaço={s})"),
         ],
         "info": [
+            {"label": "Tipo", "valor": "não-linear, preserva borda"},
             {"label": "Diâmetro (d)", "valor": f"{filtros.BILATERAL_D} px"},
             {"label": "σ de cor / espaço", "valor": f"{s} / {s}"},
+            {"label": "Pesos", "valor": "espaço × semelhança de cor"},
         ],
     }
 
@@ -246,6 +257,8 @@ def etapa_bordas():
                                  "Bordas detectadas (Canny)"),
         ],
         "info": [
+            {"label": "Operador de gradiente", "valor": "Sobel"},
+            {"label": "Etapas", "valor": "gradiente → afinamento → histerese"},
             {"label": "Limiares (histerese)",
              "valor": f"{bordas.CANNY_LIMIAR_MIN} / {bordas.CANNY_LIMIAR_MAX}"},
             {"label": "Pixels de borda", "valor": f"{perc:.2f}% da imagem"},
@@ -278,7 +291,10 @@ def etapa_indice_exg():
                                  "Índice ExG — quanto mais claro, mais vegetação"),
         ],
         "info": [
-            {"label": "Fórmula", "valor": "ExG = 2G − R − B"},
+            {"label": "ExG — Excess Green (excesso de verde)",
+             "valor": "2G − R − B"},
+            {"label": "Base", "valor": "NDVI (índice de vegetação de satélite)"},
+            {"label": "Realça", "valor": "predomínio do verde"},
             {"label": "Saída", "valor": "mapa normalizado [0, 255]"},
         ],
     }
@@ -294,6 +310,8 @@ def etapa_otsu():
                                  "Máscara binária (branco = vegetação)"),
         ],
         "info": [
+            {"label": "Tipo", "valor": "limiar global automático"},
+            {"label": "Busca", "valor": "256 limiares testados"},
             {"label": "Limiar encontrado", "valor": f"{seg['limiar']:.0f}"},
             {"label": "Critério", "valor": "máxima variância entre classes"},
         ],
@@ -311,6 +329,8 @@ def etapa_morfologia():
         ],
         "info": [
             {"label": "Elemento estruturante", "valor": "elipse 5 × 5"},
+            {"label": "Abertura (erosão→dilatação)", "valor": "remove ruído"},
+            {"label": "Fechamento (dilatação→erosão)", "valor": "preenche buracos"},
             {"label": "Regiões de vegetação",
              "valor": f"{seg['n_regioes']} contornos"},
         ],
@@ -341,10 +361,13 @@ def etapa_final():
         "info": [
             {"label": "🌿 COBERTURA VEGETAL ESTIMADA",
              "valor": f"{resultado['cobertura_vegetal_pct']:.2f}%"},
-            {"label": "PSNR (original × filtrada)",
+            {"label": "Cálculo", "valor": "pixels brancos ÷ total × 100"},
+            {"label": "PSNR — Relação Sinal-Ruído de Pico (qualidade da filtragem)",
              "valor": f"{resultado['psnr']:.2f} dB"},
-            {"label": "SNR (original × filtrada)",
+            {"label": "SNR — Relação Sinal-Ruído",
              "valor": f"{resultado['snr']:.2f} dB"},
+            {"label": "MSE — Erro Quadrático Médio (base do PSNR e SNR)",
+             "valor": "diferença média entre as imagens"},
             {"label": "Valor médio de pixel",
              "valor": f"{resultado['media_pixel']:.1f}"},
         ],
