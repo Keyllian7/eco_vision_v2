@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eco Vision V2 — Processamento de Imagens Ambientais</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🌱 Eco Vision V2</h1>
+    <p>Estimativa de Cobertura Vegetal por Processamento Digital de Imagens — Avaliação A3 · Computação Gráfica</p>
+  </header>
+
+  <main id="painel">
+
+    <section class="card" id="card-upload">
+      <div class="card-cabecalho">
+        <span class="numero">1</span>
+        <h2>Aquisição da Imagem</h2>
+      </div>
+      <p class="explicacao">
+        Envie a imagem ambiental. Ela é lida em BGR (padrão interno do OpenCV),
+        convertida para RGB e seus metadados são extraídos: resolução, canais e tamanho.
+      </p>
+      <label class="zona-upload" id="zona-upload">
+        <input type="file" id="input-imagem" accept="image/*" hidden>
+        <span id="texto-upload">📷 Clique ou arraste a imagem aqui</span>
+      </label>
+      <div class="conteudo-etapa" hidden></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>OpenCV · NumPy · Matplotlib · Flask — Pipeline: aquisição → pré-processamento → histograma → filtros → bordas → segmentação da vegetação (ExG + Otsu) → cobertura vegetal</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
