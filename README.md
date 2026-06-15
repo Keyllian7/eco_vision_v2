@@ -33,7 +33,7 @@ pip install -r requirements.txt
 ## Como executar
 
 ```bash
-python app.py
+python projeto_a3.py
 ```
 
 Abra **http://localhost:5000** no navegador, envie a imagem ambiental e

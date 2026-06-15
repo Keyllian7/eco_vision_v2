@@ -4,7 +4,7 @@ ECO VISION V2 — Estimativa de Cobertura Vegetal
 ================================================================================
 Disciplina : Computação Gráfica — Avaliação A3
 Curso      : Ciência da Computação
-Aluno      : Keyllian Azevedo
+Alunos      : Keyllian Azevedo, João Victor Santos da Costa
 
 PROBLEMA AMBIENTAL: estimar o percentual de COBERTURA VEGETAL de uma área
 a partir de uma imagem (foto ou satélite), apoiando o monitoramento de
